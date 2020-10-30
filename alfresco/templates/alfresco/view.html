@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Image View</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+</head>
+<body>
+<div class="container-fluid p-5">
+    <div class="row d-flex">
+        {% for a in node.get_ancestor %}
+            <span class="align-middle h3"> >> </span>
+            <a class="flex-fill border text-center h3" href=?id={{ a.id }}&skip_count=0>{{ a.name }}</a>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <p>{{ node.get_name }}</p>
+    </div>
+    <div class="row d-flex flex-fill justify-content-center">
+        <img src="{{ node.get_image }}" alt="{{ node.get_name }}"/>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Root</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+</head>
+<body>
+<div class="container-fluid p-5">
+    <div class="row d-flex">
+        {% for a in node.get_ancestor %}
+            <span class="align-middle h3"> >> </span>
+            <a class="flex-fill border text-center h3" href=?id={{ a.id }}&skip_count=0>{{ a.name }}</a>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <p>{{ node.get_name }}</p>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            {% for c in node.get_children %}
+                <tr>
+                    <th scope="row">{{ c.row }}</th>
+                    <td>
+                        <a class="d-flex flex-fill" href=?id={{ c.id }}&skip_count=0>{{ c.name }}</a>
+                    </td>
+                </tr>
+                {% if c.is_image %}
+                    <tr>
+                        <td colspan="2">
+                            <a class="d-flex flex-fill justify-content-center"
+                               href=?id={{ c.id }}&skip_count=0&is_image=true>
+                                <img src="{{ c.thumb }}" alt="{{ c.name }}"/>
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+    <div class="row d-flex">
+        <a class="flex-fill border text-center h3" href=?id={{ node.get_id }}&skip_count={{ node.get_prev_skip_count }}>
+            << </a>
+        <span class="align-middle h3"> {{ node.get_page }} </span>
+        <a class="flex-fill border text-center h3" href=?id={{ node.get_id }}&skip_count={{ node.get_next_skip_count }}>
+            >> </a>
+    </div>
+</div>
+</body>
+</html>
