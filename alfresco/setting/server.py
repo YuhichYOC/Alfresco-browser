@@ -33,6 +33,10 @@ def get_alfresco_server_name():
     return get_alfresco_server_addr() + ':' + get_alfresco_server_port() + '/' + get_alfresco_server_tenant() + '/'
 
 
+def get_alfresco_url():
+    return 'http://' + get_alfresco_server_name()
+
+
 def get_alfresco_auth_params():
     return {
         'userId': '[alfresco user id]',
