@@ -46,6 +46,7 @@ class Item:
     @id.setter
     def id(self, arg: str):
         self.f_id = arg
+        self.query()
 
     def query(self) -> None:
         self.f_query.ticket = self.f_query.alfresco_access_ticket
@@ -165,6 +166,7 @@ class Node(Item):
         self.f_query.node_id = child_id
         self.f_query.skip_count = 0
         child_thumb = self.f_query.children
+        child_thumb = json.loads(child_thumb.decode())
         for t in child_thumb['list']['entries']:
             if self.node_is_image(t):
                 thumb_id = t['entry']['id']
@@ -190,7 +192,8 @@ class Image(Item):
 
     @id.setter
     def id(self, arg: str):
-        super().id = arg
+        self.f_id = arg
+        self.query()
         self.query_image()
 
     def query_image(self) -> None:

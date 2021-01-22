@@ -9,17 +9,17 @@
 <body>
 <div class="container-fluid p-5">
     <div class="row d-flex">
-        {% for a in node.get_ancestor %}
+        {% for a in node.ancestor %}
             <span class="align-middle h3"> >> </span>
             <a class="flex-fill border text-center h3" href=?id={{ a.id }}&skip_count=0>{{ a.name }}</a>
         {% endfor %}
     </div>
     <div class="row">
-        <p>{{ node.get_name }}</p>
+        <p>{{ node.name }}</p>
     </div>
     <div class="row">
         <table class="table table-striped">
-            {% for c in node.get_children %}
+            {% for c in node.children %}
                 <tr>
                     <th scope="row">{{ c.row }}</th>
                     <td>
@@ -40,10 +40,10 @@
         </table>
     </div>
     <div class="row d-flex">
-        <a class="flex-fill border text-center h3" href=?id={{ node.get_id }}&skip_count={{ node.get_prev_skip_count }}>
+        <a class="flex-fill border text-center h3" href=?id={{ node.id }}&skip_count={{ node.prev_skip_count }}>
             << </a>
-        <span class="align-middle h3"> {{ node.get_page }} </span>
-        <a class="flex-fill border text-center h3" href=?id={{ node.get_id }}&skip_count={{ node.get_next_skip_count }}>
+        <span class="align-middle h3"> {{ node.page }} </span>
+        <a class="flex-fill border text-center h3" href=?id={{ node.id }}&skip_count={{ node.next_skip_count }}>
             >> </a>
     </div>
 </div>
