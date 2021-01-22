@@ -1,8 +1,7 @@
-from .rooting import rooter
+from com.yoclabo.routing import Router
 
 
 def browse(request):
-    if request.GET.get('id') is not None:
-        return rooter.another(request, request.GET.get('id'), request.GET.get('skip_count'))
-    else:
-        return rooter.root(request)
+    l_router = Router.Router()
+    l_router.request = request
+    return l_router.run()
