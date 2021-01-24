@@ -86,7 +86,7 @@ class BrowserHandler(Handler):
         super().__init__()
 
     def run(self):
-        render(self.request, 'browser/root.html')
+        return render(self.request, 'browser/root.html')
 
 
 class NodeHandler(Handler):
