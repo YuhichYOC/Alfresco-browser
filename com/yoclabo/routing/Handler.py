@@ -76,6 +76,18 @@ class Handler:
         l_image.id = self.id
         return {'node': l_image}
 
+    def run(self):
+        pass
+
+
+class BrowserHandler(Handler):
+
+    def __init__(self):
+        super().__init__()
+
+    def run(self):
+        render(self.request, 'browser/root.html')
+
 
 class NodeHandler(Handler):
 
@@ -83,9 +95,6 @@ class NodeHandler(Handler):
         super().__init__()
 
     def run(self):
-        if not self.id:
-            self.id = '-root-'
-            self.skip_count = 0
         return render(self.request, 'alfresco/browse.html', self.query_node())
 
 

@@ -42,26 +42,71 @@ class Router:
     def parameters(self, arg: list):
         self.f_parameters = arg
 
+    def has_get_param(self, name: str) -> bool:
+        if self.request.GET is None:
+            return False
+        if self.request.GET.get(name) is None:
+            return False
+        if not self.request.GET.get(name):
+            return False
+        return True
+
+    def get_get_param(self, name: str) -> str:
+        return self.request.GET.get(name)
+
+    def run_handler(self, handler: Handler, node_id: str, skip_count: int):
+        handler.request = self.request
+        handler.parameters = self.parameters
+        handler.id = node_id
+        handler.skip_count = skip_count
+        return handler.run()
+
+
+class BrowserRouter(Router):
+
+    def __init__(self):
+        super().__init__()
+
     def run(self):
-        if self.request.GET.get('id') is not None:
-            l_id = self.request.GET.get('id')
-            l_skip_count = self.request.GET.get('skip_count')
-            if 'is_image' not in self.request.GET:
-                l_node_handler = Handler.NodeHandler()
-                l_node_handler.request = self.request
-                l_node_handler.parameters = self.parameters
-                l_node_handler.id = l_id
-                l_node_handler.skip_count = l_skip_count
-                return l_node_handler.run()
-            else:
-                l_image_handler = Handler.ImageHandler()
-                l_image_handler.request = self.request
-                l_image_handler.parameters = self.parameters
-                l_image_handler.id = l_id
-                l_image_handler.skip_count = l_skip_count
-                return l_image_handler.run()
+        h = Handler.BrowserHandler()
+        return self.run_handler(h, '', 0)
+
+
+class AlfrescoRouter(Router):
+
+    def __init__(self):
+        super().__init__()
+
+    def request_towards_any_image(self) -> bool:
+        if not self.has_get_param('id'):
+            return False
+        if not self.has_get_param('is_image'):
+            return False
+        return True
+
+    def request_towards_any_node(self) -> bool:
+        if not self.has_get_param('id'):
+            return False
+        if self.has_get_param('is_image'):
+            return False
+        return True
+
+    def run_root(self):
+        h = Handler.NodeHandler()
+        return self.run_handler(h, '-root-', 0)
+
+    def run_others(self):
+        h = Handler.NodeHandler()
+        return self.run_handler(h, self.get_get_param('id'), int(self.get_get_param('skip_count')))
+
+    def run_image(self):
+        h = Handler.ImageHandler()
+        return self.run_handler(h, self.get_get_param('id'), int(self.get_get_param('skip_count')))
+
+    def run(self):
+        if self.request_towards_any_image():
+            return self.run_image()
+        elif self.request_towards_any_node():
+            return self.run_others()
         else:
-            l_node_handler = Handler.NodeHandler()
-            l_node_handler.request = self.request
-            l_node_handler.parameters = self.parameters
-            return l_node_handler.run()
+            return self.run_root()
